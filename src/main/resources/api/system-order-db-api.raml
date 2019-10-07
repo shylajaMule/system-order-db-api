@@ -1,0 +1,38 @@
+#%RAML 1.0
+title: system-order-db-api
+mediaType:
+  - application/json
+version: 1.0.0
+protocols:
+  - HTTP
+
+types:
+  orderResponseType: !include type/orderResponse.raml
+  errorResponse: !include type/errorResponseType.raml
+
+traits: 
+ logging: !include traits/logging.raml
+ clientId-enforcement: !include traits/security.raml
+ errorTraits: !include traits/error-trait.raml
+  
+
+/orders/{order-id}:
+  uriParameters:
+    order-id:
+      description: unique Item Id to trigger the operation
+      example: 1
+      type: number
+      format: int
+  get:
+    displayName: Returns a order details
+    description: get result of order corresponding to orderId
+    is: [logging, clientId-enforcement,errorTraits]
+    responses:
+      200:
+        body:
+          application/json:
+            type: orderResponseType
+            example: !include example/orderExample.raml
+     
+              
+  
